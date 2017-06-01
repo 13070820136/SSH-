@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration xmlns:log4j='http://jakarta.apache.org/log4j/'>
+
+	<appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
+		<param name="Threshold" value="debug"/>
+		<param name="Target" value="System.out"/>
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss} %5p %c{10}:%L - %m%n"/>
+		</layout>
+	</appender>
+	
+	<!--
+	<appender name="FILE" class="org.apache.log4j.DailyRollingFileAppender">
+		 <param name="Threshold" value="debug"/> 
+		<param name="File" value="D:/logs/sop-rest/rest.log"/>
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss} %5p %c{10}:%L - %m%n"/>
+		</layout>
+	</appender>
+	
+	--><!-- appender name="SEND" class="org.apache.log4j.net.SocketHubAppender">
+		<param name="Threshold" value="WARN"/>
+		<param name="Port" value="11230" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{dd MM yyyy HH:mm:ss} %p %C %nIn Zeile Nummer: %L %m %n%n"/>
+		</layout>
+	</appender -->
+
+	<logger name="com.sunkaisens">
+		<level value="debug" />
+		<appender-ref ref="CONSOLE" />
+		<appender-ref ref="FILE" />
+	</logger>
+	
+	<root>
+		<level value="error" />
+	</root>
+		
+</log4j:configuration>
