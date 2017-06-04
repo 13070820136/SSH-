@@ -24,7 +24,7 @@
             "menus": [
                 {
                     "menuid": "2", "icon": "icon-sys", "menuname": "客户管理",
-                    "menus": [{"menuid": "21", "menuname": "客户信息", "icon": "icon-page", "url": "mgr/mgrlist.jsp"}
+                    "menus": [{"menuid": "21", "menuname": "客户信息", "icon": "icon-page", "url": "customer/customer.jsp"}
                     ]
                 },{
                     "menuid": "1", "icon": "icon-sys", "menuname": "员工管理",

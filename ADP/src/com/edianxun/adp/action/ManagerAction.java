@@ -30,7 +30,7 @@ public class ManagerAction extends BaseAction
 		logger.debug("bingo");
 		return SUCCESS;
 	}
-	
+
 	@Action("mgrlogin")
 	public String login(){
 		Map<String, Object> session = getSession();
@@ -49,7 +49,7 @@ public class ManagerAction extends BaseAction
 		}
 		return "main";
 	}
-	
+
 	@Action("mgrlogout")
 	public String logout(){
 		logger.debug("logout");
