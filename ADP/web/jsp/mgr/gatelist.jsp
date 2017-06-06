@@ -3,7 +3,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>员工列表</title>
+    <title>出勤列表</title>
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/themes/default/easyui.css">
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/themes/icon.css">
     <script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery.min.js"></script>
@@ -13,64 +13,56 @@
             addClose();
             editClose();
             $('#test').datagrid({
-                title: '员工列表',
+                title: '出勤表',
                 iconCls: 'icon-save',
                 width: 950,
                 height: 550,
                 nowrap: true,
                 striped: true,
                 rownumbers: true,
-                url: '<%=request.getContextPath()%>/mgrlist',
-                sortName: 'managerId',
+                url: '<%=request.getContextPath()%>/gatelist',
+                sortName: 'gateid',
                 singleSelect: true,
-                sortOrder: 'desc',
-                idField: 'managerId',
+                sortOrder: 'day',
+                idField: 'gateid',
                 columns: [[
                     {field: 'ck', checkbox: true},
                     //   {title:'编号',field:'managerId',width:80,align:'center',sortable:true},
                     {title: '用户名', field: 'name', width: 120, align: 'center'},
-                    //	{title:'密码',field:'password',width:120,align:'center',rowspan:2},
-                    {title: '姓名', field: 'cname', width: 120, align: 'center', rowspan: 2},
-                    {title: '角色', field: 'role', width: 120, align: 'center', rowspan: 2},
-                    {title: '年龄', field: 'age', width: 50, align: 'center', rowspan: 2},
-                    {title: '手机号', field: 'phone', width: 100, align: 'center', rowspan: 2},
                     {
-                        title: '创建时间', field: 'createTime', width: 120, align: 'center', rowspan: 2,
+                        title: '上班时间', field: 'goTime', width: 120, align: 'center', rowspan: 2,
                         formatter: function (value, rowData, rowIndex) {
                             return new Date(parseInt(value) * 1000).toLocaleString().replace(/年|月/g, "-").replace(/日/g, " ");
                         }
                     },
-                    {title: '状态', field: 'status', width: 120, align: 'center', rowspan: 2},
                     {
-                        field: 'opt', title: '操作', width: 100, align: 'center', rowspan: 2,
-                        formatter: function (value, rec) {
-                            return '<span style="color:red"><a href="javascript:editStaff()">编辑</a> <a href="javascript:delStaff();">删除</a> </span>';
+                        title: '上班状态', field: 'goStatus', width: 120, align: 'center', rowspan: 2,
+                        formatter: function (value, rowData, rowIndex) {
+                            if(value==0){
+                                return '正常上班';
+                            }else{
+                                return '迟到';
+                            }
+                        }
+                    },
+                    {
+                        title: '下班时间', field: 'outTime', width: 120, align: 'center', rowspan: 2,
+                        formatter: function (value, rowData, rowIndex) {
+                            return new Date(parseInt(value) * 1000).toLocaleString().replace(/年|月/g, "-").replace(/日/g, " ");
+                        }
+                    },
+                    {
+                        title: '下班状态', field: 'outStatus', width: 120, align: 'center', rowspan: 2,
+                        formatter: function (value, rowData, rowIndex) {
+                            if(value==0){
+                                return '正常下班';
+                            }else{
+                                return '早退';
+                            }
                         }
                     }
                 ]],
-                toolbar: [{
-                    text: '增加',
-                    iconCls: 'icon-add',
-                    handler: function () {
-                        addOpen();
-                    }
-                }, {
-                    text: '编辑',
-                    iconCls: 'icon-edit',
-                    handler: function () {
-                        editStaff();
-                    }
-                }, {
-                    text: '删除',
-                    iconCls: 'icon-remove',
-                    handler: function () {
-                        delStaff();
-                    }
-                }
-                ],
-
                 pagination: true,
-
             });
 
             var p = $('#test').datagrid('getPager');

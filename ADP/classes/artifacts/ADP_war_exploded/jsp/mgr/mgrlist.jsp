@@ -25,15 +25,22 @@
                 singleSelect: true,
                 sortOrder: 'desc',
                 idField: 'managerId',
-                frozenColumns: [[
+                columns: [[
                     {field: 'ck', checkbox: true},
                     //   {title:'编号',field:'managerId',width:80,align:'center',sortable:true},
                     {title: '用户名', field: 'name', width: 120, align: 'center'},
                     //	{title:'密码',field:'password',width:120,align:'center',rowspan:2},
+                    {title: '姓名', field: 'cname', width: 120, align: 'center', rowspan: 2},
                     {title: '角色', field: 'role', width: 120, align: 'center', rowspan: 2},
+                    {title: '年龄', field: 'age', width: 50, align: 'center', rowspan: 2},
+                    {title: '手机号', field: 'phone', width: 100, align: 'center', rowspan: 2},
+                    {
+                        title: '创建时间', field: 'createTime', width: 120, align: 'center', rowspan: 2,
+                        formatter: function (value, rowData, rowIndex) {
+                            return new Date(parseInt(value) * 1000).toLocaleString().replace(/年|月/g, "-").replace(/日/g, " ");
+                        }
+                    },
                     {title: '状态', field: 'status', width: 120, align: 'center', rowspan: 2},
-                ]],
-                columns: [[
                     {
                         field: 'opt', title: '操作', width: 100, align: 'center', rowspan: 2,
                         formatter: function (value, rec) {
@@ -41,7 +48,6 @@
                         }
                     }
                 ]],
-
                 toolbar: [{
                     text: '增加',
                     iconCls: 'icon-add',
@@ -135,7 +141,10 @@
                     name: selected.name,
                     password: selected.password,
                     rpwd1: selected.password,
-                    role: selected.role,
+                    cname: selected.cname,
+                    size: selected.size,
+                    age: selected.age,
+                    phone: selected.phone,
                     status: selected.status,
                     descrition: selected.descrition
                 });
@@ -171,6 +180,9 @@
                         $('#name').val('');
                         $('#pwd').val('');
                         $('#rpwd').val('');
+                        $('#cname').val('');
+                        $('#age').val('');
+                        $('#phone').val('');
                         addClose();
                         msgShow('系统提示', '添加成功', 'info');
                         optfresh();
@@ -262,6 +274,30 @@
                         </select>
                     </td>
                 </tr>
+                <tr>
+                    <td>姓名:</td>
+                    <td><input id="cname" class="easyui-validatebox textbox" type="text" name="cname" maxlength="8"
+                               data-options="required:true,missingMessage:'必填'"/></td>
+                </tr>
+                <tr>
+                    <td>性别:</td>
+                    <td>
+                        <select class="easyui-combobox" name="size">
+                            <option value="1">男</option>
+                            <option value="0">女</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>年龄:</td>
+                    <td><input id="age" name="age" type="text" class="easyui-numberbox "
+                               maxlength="3" onkeyup="value=value.replace(/\D/g,'')"/></td>
+                </tr>
+                <tr>
+                    <td>手机号:</td>
+                    <td><input id="phone" name="phone" type="text" maxlength="11"
+                               onkeyup="value=value.replace(/\D/g,'')"></td>
+                </tr>
             </table>
             <br>
             <div style="text-align:center;padding:5px">
@@ -304,6 +340,30 @@
                             <option value="manager">管理员</option>
                         </select>
                     </td>
+                </tr>
+                <tr>
+                    <td>姓名:</td>
+                    <td><input id="cname0" class="easyui-validatebox textbox" type="text" name="cname" maxlength="8"
+                               data-options="required:true,missingMessage:'必填'"/></td>
+                </tr>
+                <tr>
+                    <td>性别:</td>
+                    <td>
+                        <select id="size0" class="easyui-combobox" name="size">
+                            <option value="1">男</option>
+                            <option value="0">女</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>年龄:</td>
+                    <td><input id="age0" name="age" type="text" class="easyui-numberbox "
+                               maxlength="3" onkeyup="value=value.replace(/\D/g,'')"/></td>
+                </tr>
+                <tr>
+                    <td>手机号:</td>
+                    <td><input id="phone0" name="phone" type="text" maxlength="11"
+                               onkeyup="value=value.replace(/\D/g,'')"></td>
                 </tr>
                 <tr>
                     <td>状态:</td>

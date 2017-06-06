@@ -2,6 +2,7 @@ package com.edianxun.adp.service.impl;
 
 import com.edianxun.adp.dao.CustomerDao;
 import com.edianxun.adp.pojo.Customer;
+import com.edianxun.adp.pojo.Manager;
 import com.edianxun.adp.service.CustomerService;
 import net.sf.json.JSONArray;
 
@@ -16,8 +17,9 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public int addManager(Customer customer) throws Exception {
-        return 0;
+    public int addCustomer(Customer customer) throws Exception {
+        customerDao.save(customer);
+        return customer.getCustomerid();
     }
 
     @Override
@@ -28,7 +30,7 @@ public class CustomerServiceImpl implements CustomerService {
             if (list.size() != 0) {
                 String lJson = JSONArray.fromObject(list).toString();
                 Long total = customerDao.allTotal(Customer.class);
-                listJson = "{\"total\":"+total+",\"rows\":"+lJson+"}";
+                listJson = "{\"total\":" + total + ",\"rows\":" + lJson + "}";
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -44,11 +46,21 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public void update(Customer customer) throws Exception {
-
+        try {
+            customerDao.update(customer);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new Exception("update customer exception");
+        }
     }
 
     @Override
     public void delCustomer(Integer customerid) throws Exception {
-
+        try {
+            customerDao.delete(Customer.class, customerid);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new Exception("delete manager exception");
+        }
     }
 }

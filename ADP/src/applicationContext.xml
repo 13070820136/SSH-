@@ -66,8 +66,11 @@
     </aop:config>
     <bean id="managerDao" class="com.edianxun.adp.dao.impl.ManagerDaoImpl"
     		p:sessionFactory-ref="sessionFactory"/>
-    		
     <bean id="managerService" class="com.edianxun.adp.service.impl.ManagerServiceImpl"
     		p:managerDao-ref="managerDao"/>
-    
+
+    <bean id="customerDao" class="com.edianxun.adp.dao.impl.CustomerDaoImpl"
+          p:sessionFactory-ref="sessionFactory"/>
+    <bean id="customerService" class="com.edianxun.adp.service.impl.CustomerServiceImpl"
+          p:customerDao-ref="customerDao"/>
 </beans>  

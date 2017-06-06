@@ -10,7 +10,7 @@ public interface CustomerService {
 	 * @return 返回新用户主键
 	 * @throws Exception
 	 */
-	int addManager(Customer customer) throws Exception;
+	int addCustomer(Customer customer) throws Exception;
 
 	String customerList() throws Exception;
 

@@ -35,4 +35,7 @@ public interface ManagerService {
 	void update(Manager manager) throws Exception;
 	
 	void del(Integer id) throws Exception;
+
+	String gateList() throws Exception;
+
 }

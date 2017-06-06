@@ -2,6 +2,8 @@ package com.edianxun.adp.service.impl;
 
 import java.util.List;
 
+import com.edianxun.adp.dao.GateDao;
+import com.edianxun.adp.pojo.GateCard;
 import net.sf.json.JSONArray;
 
 import com.edianxun.adp.dao.ManagerDao;
@@ -14,6 +16,11 @@ public class ManagerServiceImpl implements ManagerService {
 	public void setManagerDao(ManagerDao managerDao) {
 		this.managerDao = managerDao;
 	}
+	private GateDao gateDao; //spring 注入
+	public void setGateDao(GateDao gateDao) {
+		this.gateDao = gateDao;
+	}
+
 	@Override
 	public int addManager(Manager manager) throws Exception {
 		try {
@@ -100,5 +107,22 @@ public class ManagerServiceImpl implements ManagerService {
 		}
 		
 	}
-	
+
+	@Override
+	public String gateList() throws Exception {
+		String listJson = null;
+		try {
+			List<GateCard> list = gateDao.findAllOrderbyDay();
+			if (list.size() != 0) {
+				String lJson = JSONArray.fromObject(list).toString();
+				Long total = gateDao.allTotal(GateCard.class);
+				listJson = "{\"total\":"+total+",\"rows\":"+lJson+"}";
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new Exception("query all gate card exception");
+		}
+		return listJson;
+	}
+
 }

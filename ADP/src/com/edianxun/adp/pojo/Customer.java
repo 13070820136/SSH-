@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Table(name = "customer")
 public class Customer {
     @Id
-    @Column(name = "managerId")
+    @Column(name = "customer_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int customerid;
     private String account;
@@ -18,7 +18,9 @@ public class Customer {
     private int age;
     private int size;
     private int phone;
+    @Column(name = "create_time")
     private int createTime;
+    private String status;
 
     public int getCustomerid() {
         return customerid;
@@ -82,6 +84,14 @@ public class Customer {
 
     public void setCreateTime(int createTime) {
         this.createTime = createTime;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public Customer() {

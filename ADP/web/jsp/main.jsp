@@ -30,7 +30,7 @@
                     "menuid": "1", "icon": "icon-sys", "menuname": "员工管理",
                     "menus": [
                         {"menuid": "12", "menuname": "员工信息", "icon": "icon-page", "url": "mgr/mgrlist.jsp"},
-                        {"menuid": "13", "menuname": "员工出勤", "icon": "icon-class", "url": "menu1/class.html"},
+                        {"menuid": "13", "menuname": "员工出勤", "icon": "icon-class", "url": "mgr/gatelist.jsp"},
                         {"menuid": "14", "menuname": "员工薪资", "icon": "icon-role", "url": "demo2.html"}
                     ]
                 }, {
@@ -134,7 +134,7 @@
         style="padding-left:40%; font-size: 16px; "><img src="../images/blocks.gif" width="20" height="20"
                                                          align="absmiddle"/>洗浴后台管理系统</span></div>
 <div region="south" split="true" style="height: 30px; background: #D2E0F2; ">
-    <div class="footer">版权所有，阳光凯讯</div>
+    <div class="footer"><%--版权所有，阳光凯讯--%></div>
 </div>
 <div region="west" hide="true" split="true" title="导航菜单" style="width:180px;" id="west">
     <div id="nav" class="easyui-accordion" fit="true" border="false">

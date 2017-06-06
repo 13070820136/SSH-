@@ -3,7 +3,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>员工列表</title>
+    <title>客户列表</title>
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/themes/default/easyui.css">
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/themes/icon.css">
     <script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery.min.js"></script>
@@ -13,27 +13,42 @@
             addClose();
             editClose();
             $('#test').datagrid({
-                title: '员工列表',
+                title: '客户列表',
                 iconCls: 'icon-save',
-                width: 950,
+                width: 880,
                 height: 550,
                 nowrap: true,
                 striped: true,
                 rownumbers: true,
                 url: '<%=request.getContextPath()%>/customerList',
-                sortName: 'managerId',
+                sortName: 'customerId',
                 singleSelect: true,
                 sortOrder: 'desc',
-                idField: 'managerId',
-                frozenColumns: [[
-                    {field: 'ck', checkbox: true},
-                    //   {title:'编号',field:'managerId',width:80,align:'center',sortable:true},
-                    {title: '用户名', field: 'name', width: 120, align: 'center'},
-                    //	{title:'密码',field:'password',width:120,align:'center',rowspan:2},
-                    {title: '角色', field: 'role', width: 120, align: 'center', rowspan: 2},
-                    {title: '状态', field: 'status', width: 120, align: 'center', rowspan: 2},
-                ]],
+                idField: 'customerId',
                 columns: [[
+                    {field: 'ck', checkbox: true},
+                    {title: '账号', field: 'account', width: 100, align: 'center'},
+                    {title: '密码', field: 'password', width: 100, align: 'center', rowspan: 2},
+                    {title: '姓名', field: 'name', width: 50, align: 'center', rowspan: 2},
+                    {
+                        field: 'size', title: '性别', width: 100, align: 'center', rowspan: 2,
+                        formatter: function (value, rowData, rowIndex) {
+                            if (value == 0) {
+                                return "女";
+                            } else if (value == 1) {
+                                return "男";
+                            }
+                        }
+                    },
+                    {title: '年龄', field: 'age', width: 50, align: 'center', rowspan: 2},
+                    {title: '手机号', field: 'phone', width: 100, align: 'center', rowspan: 2},
+                    {title: '状态', field: 'status', width: 100, align: 'center', rowspan: 2},
+                    {
+                        title: '创建时间', field: 'createTime', width: 120, align: 'center', rowspan: 2,
+                        formatter: function (value, rowData, rowIndex) {
+                            return new Date(parseInt(value) * 1000).toLocaleString().replace(/年|月/g, "-").replace(/日/g, " ");
+                        }
+                    },
                     {
                         field: 'opt', title: '操作', width: 100, align: 'center', rowspan: 2,
                         formatter: function (value, rec) {
@@ -41,7 +56,6 @@
                         }
                     }
                 ]],
-
                 toolbar: [{
                     text: '增加',
                     iconCls: 'icon-add',
@@ -110,9 +124,9 @@
         }
         function delStaff() {
             var selected = $('#test').datagrid('getSelected');
-            $.messager.confirm('系统提示', '您确定要删除' + selected.name + '吗?', function (r) {
+            $.messager.confirm('系统提示', '您确定要删除' + selected.account + '吗?', function (r) {
                 if (r) {
-                    $.post('mgrdel?managerId=' + selected.managerId, function (msg) {
+                    $.post('customerDel?customerid=' + selected.customerid, function (msg) {
                         if (msg == 'ok') {
                             msgShow('系统提示', '删除成功', 'info');
                         } else {
@@ -131,13 +145,14 @@
                 editOpen();
                 var p = selected.password;
                 $('#ee').form('load', {
-                    managerId: selected.managerId,
-                    name: selected.name,
+                    customerid: selected.customerid,
+                    account: selected.account,
                     password: selected.password,
-                    rpwd1: selected.password,
-                    role: selected.role,
-                    status: selected.status,
-                    descrition: selected.descrition
+                    name: selected.name,
+                    size: selected.size,
+                    age: selected.age,
+                    phone: selected.phone,
+                    status: selected.status
                 });
             }
         }
@@ -154,29 +169,24 @@
         }
 
         function submitForm() {
-            var name = $('#name').val();
-            var pwd = $('#pwd').val();
-            var rpwd = $('#rpwd').val();
-            if (name.length < 6 || name.length > 20) {
-                msgShow('系统提示', '用户名6-20个字符', 'info');
-            } else if (pwd.length < 6 || pwd.length > 20) {
-                msgShow('系统提示', '密码6-20个字符', 'info');
-            } else if (pwd != rpwd) {
-                msgShow('系统提示', '两次输入密码不一致', 'info');
-            } else {
-                $.messager.progress();	// display the progress bar
-                $('#ff').form('submit', {
-                    success: function () {
-                        $.messager.progress('close');	// hide progress bar while submit successfully
-                        $('#name').val('');
-                        $('#pwd').val('');
-                        $('#rpwd').val('');
-                        addClose();
+            $.messager.progress();	// display the progress bar
+            $('#ff').form('submit', {
+                success: function (result) {
+                    $.messager.progress('close');
+                    $('#account').val('');
+                    $('#password').val('');
+                    $('#name').val('');
+                    $('#age').val('');
+                    $('#phone').val('');
+                    if (result == 102) {
+                        msgShow('系统提示', '添加失败', 'info');
+                    } else {
                         msgShow('系统提示', '添加成功', 'info');
-                        optfresh();
                     }
-                });
-            }
+                    addClose();
+                    optfresh();
+                }
+            });
         }
 
         function clearForm() {
@@ -184,26 +194,19 @@
         }
 
         function submitEdit() {
-            var name = $('#name1').val();
-            var pwd = $('#pwd1').val();
-            var rpwd = $('#rpwd1').val();
-            if (name.length < 6 || name.length > 20) {
-                msgShow('系统提示', '用户名6-20个字符', 'info');
-            } else if (pwd.length < 6 || pwd.length > 20) {
-                msgShow('系统提示', '密码6-20个字符', 'info');
-            } else if (pwd != rpwd) {
-                msgShow('系统提示', '两次输入密码不一致', 'info');
-            } else {
-                $.messager.progress();	// display the progress bar
-                $('#ee').form('submit', {
-                    success: function () {
-                        $.messager.progress('close');	// hide progress bar while submit successfully
-                        editClose();
-                        msgShow('系统提示', '修改成功', 'info');
-                        optfresh();
+            $.messager.progress();	// display the progress bar
+            $('#ee').form('submit', {
+                success: function (result) {
+                    $.messager.progress('close');
+                    if (result == 102) {
+                        msgShow('系统提示', '编辑失败', 'info');
+                    } else {
+                        msgShow('系统提示', '编辑成功', 'info');
                     }
-                });
-            }
+                    editClose();
+                    optfresh();
+                }
+            });
         }
 
         function cancelEdit() {
@@ -231,36 +234,48 @@
 
 <body>
 <table id="test"></table>
-<div id="add" class="easyui-window" title="添加管理员" style="width:400px;height:300px"
+<div id="add" class="easyui-window" title="添加客户" style="width:400px;height:300px"
      data-options="iconCls:'icon-add',modal:true">
     <div style="padding:10px 60px 20px 60px">
-        <form id="ff" action="mgradd" method="post">
+        <form id="ff" action="customerAdd" method="post">
             <table cellpadding="5">
                 <tr>
-                    <td>用户名:</td>
-                    <td><input id="name" class="easyui-validatebox textbox" type="text" name="name" maxlength="20"
+                    <td>账号:</td>
+                    <input type="hidden" name="customerid"/>
+                    <td><input id="account" class="easyui-validatebox textbox" type="text" name="account" maxlength="20"
                                validType="length[6,20]"
                                data-options="required:true,missingMessage:'必填',invalidMessage:'6-20个字符' "/></td>
                 </tr>
                 <tr>
                     <td>密码:</td>
-                    <td><input id="pwd" name="password" type="password" class="easyui-validatebox textbox"
+                    <td><input id="password" name="password" type="password" class="easyui-validatebox textbox"
                                maxlength="20" validType="length[6,20]"
                                data-options="required:true,missingMessage:'必填' ,invalidMessage:'6-20个字符' "/></td>
                 </tr>
                 <tr>
-                    <td>确认密码:</td>
-                    <td><input id="rpwd" name="rpwd" type="password" class="easyui-validatebox textbox" maxlength="20"
-                               missingMessage="请以上重复密码" required="required" validType="equals['#pwd']"/></td>
+                    <td>姓名:</td>
+                    <td><input id="name" name="name" type="text" class="easyui-validatebox textbox"
+                               maxlength="20"
+                               data-options="required:true,missingMessage:'必填'"/></td>
                 </tr>
                 <tr>
-                    <td>角色:</td>
+                    <td>性别:</td>
                     <td>
-                        <select class="easyui-combobox" name="role">
-                            <option value="superManager">超级管理员</option>
-                            <option value="manager" selected>管理员</option>
+                        <select class="easyui-combobox" name="size">
+                            <option value="1">男</option>
+                            <option value="0">女</option>
                         </select>
                     </td>
+                </tr>
+                <tr>
+                    <td>年龄:</td>
+                    <td><input id="age" name="age" type="text" class="easyui-numberbox "
+                               maxlength="3" onkeyup="value=value.replace(/\D/g,'')"/></td>
+                </tr>
+                <tr>
+                    <td>手机号:</td>
+                    <td><input id="phone" name="phone" type="text" maxlength="11"
+                               onkeyup="value=value.replace(/\D/g,'')"></td>
                 </tr>
             </table>
             <br>
@@ -273,37 +288,49 @@
     </div>
 </div>
 
-<div id="edit" class="easyui-window" title="编辑管理员" style="width:400px;height:400px"
+<div id="edit" class="easyui-window" title="编辑客户" style="width:400px;height:400px"
      data-options="iconCls:'icon-edit',modal:true">
     <div style="padding:10px 60px 20px 60px">
-        <form id="ee" action="mgrUpdateInfo" method="post">
+        <form id="ee" action="customerUpdateInfo" method="post">
             <table cellpadding="5">
                 <tr>
-                    <td>用户名:</td>
-                    <td><input id="managerId" class="easyui-validatebox textbox" type="hidden" name="managerId"/>
-                        <input id="name1" class="easyui-validatebox textbox" type="text" name="name" maxlength="20"
+                    <td>账号:</td>
+                    <input type="hidden" name="customerid"/>
+                    <td><input id="account0" class="easyui-validatebox textbox" type="text" name="account"
+                               maxlength="20"
                                validType="length[6,20]"
                                data-options="required:true,missingMessage:'必填',invalidMessage:'6-20个字符' "/></td>
                 </tr>
                 <tr>
                     <td>密码:</td>
-                    <td><input id="pwd1" name="password" type="password" class="easyui-validatebox textbox"
+                    <td><input id="password0" name="password" type="password" class="easyui-validatebox textbox"
                                maxlength="20" validType="length[6,20]"
                                data-options="required:true,missingMessage:'必填' ,invalidMessage:'6-20个字符' "/></td>
                 </tr>
                 <tr>
-                    <td>确认密码:</td>
-                    <td><input id="rpwd1" name="rpwd1" type="password" class="easyui-validatebox textbox" maxlength="20"
-                               missingMessage="请以上重复密码" required="required" validType="equals['#pwd1']"/></td>
+                    <td>姓名:</td>
+                    <td><input id="name0" name="name" type="text" class="easyui-validatebox textbox"
+                               maxlength="20"
+                               data-options="required:true,missingMessage:'必填'"/></td>
                 </tr>
                 <tr>
-                    <td>角色:</td>
+                    <td>性别:</td>
                     <td>
-                        <select class="easyui-combobox" name="role">
-                            <option value="superManager">超级管理员</option>
-                            <option value="manager">管理员</option>
+                        <select id="size0" class="easyui-combobox" name="size">
+                            <option value="1">男</option>
+                            <option value="0">女</option>
                         </select>
                     </td>
+                </tr>
+                <tr>
+                    <td>年龄:</td>
+                    <td><input id="age0" name="age" type="text" class="easyui-numberbox "
+                               maxlength="3" onkeyup="value=value.replace(/\D/g,'')"/></td>
+                </tr>
+                <tr>
+                    <td>手机号:</td>
+                    <td><input id="phone0" name="phone" type="text" maxlength="11"
+                               onkeyup="value=value.replace(/\D/g,'')"></td>
                 </tr>
                 <tr>
                     <td>状态:</td>
@@ -313,11 +340,6 @@
                             <option value="FORBID">禁用</option>
                         </select>
                     </td>
-                </tr>
-                <tr>
-                    <td>描述:</td>
-                    <td><input id="descrition" class="easyui-validatebox textbox" name="descrition" type="text"
-                               maxlength="20"/></td>
                 </tr>
             </table>
             <br>
